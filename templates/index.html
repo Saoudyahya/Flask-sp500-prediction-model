@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sp500 predictor</title>
+    <link
+      href="{{url_for('static',filename='css/main.css')}}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- hero -->
+    <main
+      class="bg-black min-h-screen relative overflow-x-hidden text-zinc-100 p-12 max-sm:p-10"
+    >
+      <div
+        class="min-h-[calc(100vh-100px)] w-full relative text-bo flex flex-col justify-center items-center"
+      >
+        <div
+          class="z-[0] w-full h-full fixed top-0 left-0  opacity-45"
+          style="background-image: url({{ url_for('static', filename='paper.svg') }});"
+        ></div>
+
+        <!-- <div class="z-[5] w-64 h-64 opacity-40 blur-[100px] bg-gradient-to-r from-violet-600 to-indigo-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div> -->
+        <div
+          class="z-10 w-full text-center flex flex-col justify-center items-center sm:max-w-screen-md"
+        >
+          <h1
+            class="text-6xl sm:text-7xl mb-3 font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500"
+          >
+            Standard & Poor's 500
+            <span class="block text-4xl font-semibold sm:text-5xl">Index Predictor</span>
+          </h1>
+          <p class="text-sm text-zinc-400">
+            This model utilizes cutting-edge technology to predict the
+            likelihood of information being fake news. By analyzing various
+            aspects of text, it empowers you to navigate the digital world with
+            confidence. Unmask deception and make informed decisions, one click
+            at a time.
+          </p>
+        </div>
+        <p
+          
+          class="font-bold z-10 text-4xl font-mono mt-10 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500"
+        >
+          <span id="result" class="">00.00</span>%
+        </p>
+      </div>
+
+      <div
+        class="absolute z-10 bottom-5 left-1/2 flex flex-col justify-center items-center -translate-x-1/2"
+      >
+        <p class="text-sm flex text-zinc-400">
+          These predictions are based on our model analysis of text and should
+          not be interpreted as absolute truths
+        </p>
+      </div>
+    </main>
+
+    <script>
+      const duration = 10000;
+      const element = document.getElementById("result");
+      let isFetched = false;
+
+      function getRandomNumber() {
+        return Math.floor(Math.random() * 1000);
+      }
+
+      let currentNumber = getRandomNumber();
+
+      const animate = () => {
+        if (!isFetched) {
+          currentNumber = getRandomNumber();
+          element.textContent =
+            currentNumber.toLocaleString({
+              minimumIntegerDigits: 2,
+              maximumFractionDigits: 5,
+            }) +
+            "," +
+            currentNumber.toLocaleString({
+              minimumIntegerDigits: 3,
+              maximumFractionDigits: 2,
+            });
+          requestAnimationFrame(animate);
+        }
+      };
+      animate();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const response = fetch("/predict", {
+          method: "GET",
+        })
+          .then((response) =>
+            response.json().then((data) => {
+              console.log(data);
+              element.textContent = data.precision;
+              isFetched = true;
+            })
+          )
+          .catch((error) => {
+            console.log(error);
+            element.textContent = "error!";
+            element.style.color = "red";
+            element.style.fontSize = "1.1em"
+            isFetched = true; 
+          });
+      });
+    </script>
+  </body>
+</html>
