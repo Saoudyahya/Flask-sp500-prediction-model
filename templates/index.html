@@ -18,7 +18,7 @@
         class="min-h-[calc(100vh-100px)] w-full relative text-bo flex flex-col justify-center items-center"
       >
         <div
-          class="z-[0] w-full h-full fixed top-0 left-0  opacity-45"
+          class="z-[0] w-full h-full fixed top-0 left-0 opacity-45"
           style="background-image: url({{ url_for('static', filename='paper.svg') }});"
         ></div>
 
@@ -30,18 +30,20 @@
             class="text-6xl sm:text-7xl mb-3 font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500"
           >
             Standard & Poor's 500
-            <span class="block text-4xl font-semibold sm:text-5xl">Index Predictor</span>
+            <span class="block text-2xl font-semibold text-zinc-300 sm:text-5xl"
+              >Index Predictor.</span
+            >
           </h1>
           <p class="text-sm text-zinc-400">
-            This model utilizes cutting-edge technology to predict the
-            likelihood of information being fake news. By analyzing various
-            aspects of text, it empowers you to navigate the digital world with
-            confidence. Unmask deception and make informed decisions, one click
-            at a time.
+            Our S&P 500 prediction model leverages cutting-edge technology to
+            analyze and forecast the performance of the index. By processing
+            vast amounts of data, it empowers you to make informed investment
+            decisions with greater confidence. Navigate the financial landscape
+            with clarity and unlock valuable insights, one prediction at a time.
           </p>
         </div>
         <p
-          
+          id="resultp"
           class="font-bold z-10 text-4xl font-mono mt-10 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500"
         >
           <span id="result" class="">00.00</span>%
@@ -100,10 +102,11 @@
           )
           .catch((error) => {
             console.log(error);
+            document.getElementById("resultp").textContent = "";
             element.textContent = "error!";
             element.style.color = "red";
-            element.style.fontSize = "1.1em"
-            isFetched = true; 
+            element.style.fontSize = "1.1em";
+            isFetched = true;
           });
       });
     </script>
