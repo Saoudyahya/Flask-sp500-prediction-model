@@ -71,11 +71,8 @@ def train_pipeline(data, model, base_predictors, horizons):
         test_data = data.iloc[-100:]
         predictions = backtest(train_data, model, all_predictors)
         if predictions is not None:
-            metrics = calculate_metrics(predictions)
-            logger.info("Performance Metrics:")
-            for metric, value in metrics.items():
-                logger.info(f"{metric}: {value}")
-            return metrics['Precision']
+            precision = precision_score(predictions["Target"], predictions["Prediction"])
+            return precision
     except Exception as e:
         logger.error(f"An error occurred in train_pipeline function: {e}")
         traceback.print_exc()

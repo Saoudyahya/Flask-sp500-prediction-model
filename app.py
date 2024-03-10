@@ -12,7 +12,7 @@ def index():
 def predict():
     if request.method == 'GET':
         precision = model.main()  # Call your main function
-        return jsonify({'precision': precision})
+    return jsonify({"precision": precision}) 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == '__main__':  
+    app.run(host='0.0.0.0', port=5000)   

@@ -11,6 +11,7 @@
   </head>
   <body>
     <!-- hero -->
+
     <main
       class="bg-black min-h-screen relative overflow-x-hidden text-zinc-100 p-12 max-sm:p-10"
     >
@@ -41,13 +42,20 @@
             decisions with greater confidence. Navigate the financial landscape
             with clarity and unlock valuable insights, one prediction at a time.
           </p>
+          <button
+            id="fetchButton"
+            class="bg-zinc-600 hover:bg-zinc-800 rounded-3xl text-white mt-3 font-semibold py-3 px-6"
+          >
+            precision of tomorrow
+          </button>
+
+          <p
+            id="resultp"
+            class="font-bold z-10 hidden text-4xl font-mono mt-5 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500"
+          >
+            <span id="result" class="">00.00</span>%
+          </p>
         </div>
-        <p
-          id="resultp"
-          class="font-bold z-10 text-4xl font-mono mt-10 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500"
-        >
-          <span id="result" class="">00.00</span>%
-        </p>
       </div>
 
       <div
@@ -63,6 +71,7 @@
     <script>
       const duration = 10000;
       const element = document.getElementById("result");
+      const fetchButton = document.getElementById("fetchButton");
       let isFetched = false;
 
       function getRandomNumber() {
@@ -89,26 +98,36 @@
       };
       animate();
 
-      document.addEventListener("DOMContentLoaded", () => {
+      function fetchData() {
+        const element = document.getElementById("resultp");
+        let isFetched = false;
+        element.classList.remove("hidden");
+        fetchButton.disabled = true;
+        fetchButton.classList.add("hidden");
         const response = fetch("/predict", {
           method: "GET",
         })
-          .then((response) =>
+          .then((response) => {
             response.json().then((data) => {
               console.log(data);
-              element.textContent = data.precision;
+              const precision = parseFloat(data.precision) * 100;
+              element.textContent = precision + "%";
               isFetched = true;
-            })
-          )
+            });
+          })
           .catch((error) => {
             console.log(error);
-            document.getElementById("resultp").textContent = "";
+            element.textContent = "";
             element.textContent = "error!";
             element.style.color = "red";
             element.style.fontSize = "1.1em";
             isFetched = true;
           });
-      });
+      }
+
+      // Add click event listener to the button
+     
+        fetchButton.addEventListener("click", fetchData);
     </script>
   </body>
 </html>
