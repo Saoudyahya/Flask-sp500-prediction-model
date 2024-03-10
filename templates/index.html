@@ -11,6 +11,7 @@
   </head>
   <body>
     <!-- hero -->
+    
     <main
       class="bg-black min-h-screen relative overflow-x-hidden text-zinc-100 p-12 max-sm:p-10"
     >
@@ -41,14 +42,47 @@
             decisions with greater confidence. Navigate the financial landscape
             with clarity and unlock valuable insights, one prediction at a time.
           </p>
+          <button id="fetchButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            precision of tomorrow
+          </button>
+          <div class="mt-2 flex flex-col justify-center items-center z-10">
+            <!-- spinner -->
+            <div
+              id="spinner"
+              class="hidden items-center animate-spin justify-center h-10 w-10"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40px"
+                height="40px"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z"
+                  fill="#fff"
+                />
+                <path
+                  d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z"
+                  fill="#fff"
+                />
+              </svg>
+            </div>
+          
+          </div>
+        </div>
         </div>
         <p
           id="resultp"
           class="font-bold z-10 text-4xl font-mono mt-10 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500"
-        >
+        > 
+       
           <span id="result" class="">00.00</span>%
         </p>
+      
+     
       </div>
+      
 
       <div
         class="absolute z-10 bottom-5 left-1/2 flex flex-col justify-center items-center -translate-x-1/2"
@@ -88,27 +122,37 @@
         }
       };
       animate();
+      const spinner = document.getElementById("spinner");
+      
+ 
 
-      document.addEventListener("DOMContentLoaded", () => {
+      function fetchData() {
+        const element = document.getElementById("resultp");
+        let isFetched = false;
         const response = fetch("/predict", {
           method: "GET",
-        })
-          .then((response) =>
-            response.json().then((data) => {
-              console.log(data);
-              element.textContent = data.precision;
-              isFetched = true;
-            })
-          )
-          .catch((error) => {
-            console.log(error);
-            document.getElementById("resultp").textContent = "";
-            element.textContent = "error!";
-            element.style.color = "red";
-            element.style.fontSize = "1.1em";
+        }).then((response) => {
+          response.json().then((data) => {
+            console.log(data);
+            const precision = parseFloat(data.precision) * 100;
+            element.textContent = precision + "%";
             isFetched = true;
+           
           });
-      });
+        }).catch((error) => {
+          console.log(error);
+          element.textContent = "";
+          element.textContent = "error!";
+          element.style.color = "red";
+          element.style.fontSize = "1.1em";
+          isFetched = true;
+    
+        });
+      }
+  
+      // Add click event listener to the button
+      document.getElementById('fetchButton').addEventListener('click', fetchData);
+
     </script>
   </body>
 </html>
